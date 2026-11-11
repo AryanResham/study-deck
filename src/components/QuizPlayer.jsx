@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 import PlayerHeader from "./PlayerHeader.jsx";
+import KeyHints from "./KeyHints.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
 
@@ -219,9 +220,12 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                 </div>
               )}
 
-              <p className="mt-6 hidden text-center text-xs text-zinc-600 md:block">
-                1–{question.options.length} choose · Enter next
-              </p>
+              <KeyHints
+                hints={[
+                  { keys: `1–${question.options.length}`, label: "choose" },
+                  { keys: "Enter", label: "next" },
+                ]}
+              />
             </>
           )}
         </div>

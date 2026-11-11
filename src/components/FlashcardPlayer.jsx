@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Shuffle } from "lucide-react";
 import PlayerHeader from "./PlayerHeader.jsx";
+import KeyHints from "./KeyHints.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { countCardStatuses } from "../lib/artifacts.js";
 import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
@@ -238,9 +239,22 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                 </button>
               </div>
 
-              <p className="mt-6 hidden text-center text-xs text-zinc-600 md:block">
-                Space flip · arrow keys move · 1 still learning · 2 got it
-              </p>
+              <KeyHints
+                hints={[
+                  { keys: "Space", label: "flip" },
+                  {
+                    keys: (
+                      <>
+                        <ArrowLeft size={12} />
+                        <ArrowRight size={12} />
+                      </>
+                    ),
+                    label: "move",
+                  },
+                  { keys: "1", label: "still learning" },
+                  { keys: "2", label: "got it" },
+                ]}
+              />
             </>
           )}
         </div>
