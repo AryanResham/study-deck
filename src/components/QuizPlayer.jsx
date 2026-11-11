@@ -5,12 +5,13 @@ import KeyHints from "./KeyHints.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
 
-// Copies the questions with their options shuffled
-// Models tend to put the right answer in the same place, so we shuffle every round
+// Copies the questions in a new random order, each with its options shuffled too
+// Runs at the start of every round, so a retake or re-test never repeats the same order
+// (models also tend to put the right answer in the same place, which shuffling hides)
 const buildRound = (questions, isFullQuiz) => {
   return {
     isFullQuiz,
-    questions: questions.map((question) => ({ ...question, options: shuffle(question.options) })),
+    questions: shuffle(questions).map((question) => ({ ...question, options: shuffle(question.options) })),
   };
 };
 
