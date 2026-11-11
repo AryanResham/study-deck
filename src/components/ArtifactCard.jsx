@@ -1,4 +1,4 @@
-import { Layers, ListChecks, TriangleAlert } from "lucide-react";
+import { Layers, ListChecks, Trash2, TriangleAlert } from "lucide-react";
 import { countCardStatuses, itemWord } from "../lib/artifacts.js";
 import { plural } from "../lib/utils.js";
 
@@ -73,8 +73,14 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
         >
           Harder
         </button>
-        <button type="button" className={`${smallButton} ml-auto hover:text-zinc-100`} onClick={handleDelete}>
-          Delete
+        <button
+          type="button"
+          className={`${smallButton} ml-auto`}
+          onClick={handleDelete}
+          aria-label={`Delete ${artifact.title}`}
+          title="Delete"
+        >
+          <Trash2 size={16} />
         </button>
       </div>
     </div>
