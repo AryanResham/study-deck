@@ -56,12 +56,13 @@ const PendingCard = ({ generation, onCancel, onRetry, onDismiss }) => {
     );
   }
 
+  // The model's own reason is shown, because "too thin" and "all covered" need different fixes
   if (generation.status === "exhausted") {
     return (
       <ErrorNotice
         tone="info"
-        title="Your notes are fully covered"
-        message="Add more notes to keep going."
+        title="Nothing new to make"
+        message={`${generation.message} Try different directions, or start a new project with more notes.`}
         onDismiss={onDismiss}
       />
     );

@@ -1,5 +1,5 @@
 // A message box with optional Retry and Dismiss buttons
-// tone "error" is red, "info" is neutral
+// tone "error" has a stronger border and is announced at once; "info" is quieter
 const ErrorNotice = ({ title, message, tone = "error", onRetry, onDismiss, children }) => {
   const colors =
     tone === "error"

@@ -101,7 +101,8 @@ export const getWeakItems = (project, type) => {
       }
     }
   }
-  return texts.slice(-LIMITS.weakMax);
+  // Long items are cut, so one huge card cannot fail the whole request
+  return texts.slice(-LIMITS.weakMax).map((text) => text.slice(0, LIMITS.weakTextMax));
 };
 
 // Counts flashcards by status: known, learning, and new
