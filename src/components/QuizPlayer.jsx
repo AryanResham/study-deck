@@ -1,0 +1,220 @@
+import { useEffect, useState } from "react";
+import PlayerHeader from "./PlayerHeader.jsx";
+import SourceNote from "./SourceNote.jsx";
+import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
+
+// Copies the questions with their options shuffled
+// Models tend to put the right answer in the same place, so we shuffle every round
+const buildRound = (questions, isFullQuiz) => {
+  return {
+    isFullQuiz,
+    questions: questions.map((question) => ({ ...question, options: shuffle(question.options) })),
+  };
+};
+
+// One question at a time, instant feedback, and re-tests of wrong answers
+const QuizPlayer = ({ artifact, onProgress, onBack }) => {
+  const [round, setRound] = useState(() => buildRound(artifact.items, true));
+  const [index, setIndex] = useState(0);
+  // The option picked for the current question, or null before answering
+  const [selected, setSelected] = useState(null);
+  // Question id -> true if answered correctly in this round
+  const [results, setResults] = useState({});
+  const [isFinished, setIsFinished] = useState(false);
+
+  const question = round.questions[index];
+  const total = round.questions.length;
+  const score = Object.values(results).filter((correct) => correct).length;
+  const wrongQuestions = round.questions.filter((item) => results[item.id] === false);
+
+  // Records the chosen option; answers cannot be changed
+  const choose = (option) => {
+    if (selected !== null) {
+      return;
+    }
+    setSelected(option);
+    setResults({ ...results, [question.id]: option === question.answer });
+  };
+
+  // Goes to the next question, or ends the round
+  const next = () => {
+    if (selected === null) {
+      return;
+    }
+    if (index + 1 < total) {
+      setIndex(index + 1);
+      setSelected(null);
+      return;
+    }
+    setIsFinished(true);
+    // Only full runs count as attempts; re-tests are practice
+    if (round.isFullQuiz) {
+      const attempt = { score, total, date: Date.now() };
+      onProgress({ attempts: [...artifact.progress.attempts, attempt] });
+    }
+  };
+
+  // Starts a new round with the given questions
+  const startRound = (questions, isFullQuiz) => {
+    setRound(buildRound(questions, isFullQuiz));
+    setIndex(0);
+    setSelected(null);
+    setResults({});
+    setIsFinished(false);
+  };
+
+  // Keys 1 to 5 pick an option, Enter moves on
+  // Re-attached on every render so the handler always sees the latest state
+  useEffect(() => {
+    const handleKey = (event) => {
+      if (shouldIgnoreKey(event) || isFinished) {
+        return;
+      }
+      const number = Number(event.key);
+      if (number >= 1 && number <= question.options.length) {
+        choose(question.options[number - 1]);
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        next();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  });
+
+  // Colours an option after the question is answered
+  const optionStyle = (option) => {
+    if (selected === null) {
+      return "border-zinc-700 bg-zinc-900 hover:border-zinc-500 hover:bg-zinc-800";
+    }
+    if (option === question.answer) {
+      return "border-emerald-400/60 bg-emerald-400/10 text-emerald-100";
+    }
+    if (option === selected) {
+      return "border-red-400/60 bg-red-400/10 text-red-100";
+    }
+    return "border-zinc-800 bg-zinc-900 text-zinc-500";
+  };
+
+  const bestScore = artifact.progress.attempts.reduce((best, attempt) => Math.max(best, attempt.score), 0);
+  const subtitle = round.isFullQuiz
+    ? `${plural(artifact.items.length, "question")}${artifact.progress.attempts.length > 0 ? ` · best ${bestScore}/${artifact.items.length}` : ""}`
+    : "Re-testing wrong answers";
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <PlayerHeader title={artifact.title} subtitle={subtitle} onBack={onBack} />
+
+      <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8">
+        <div className="mx-auto max-w-2xl">
+          {isFinished ? (
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+              <p className="text-center text-sm text-zinc-400">{round.isFullQuiz ? "Your score" : "Re-test score"}</p>
+              <p className="mt-1 text-center text-4xl font-semibold">
+                {score}
+                <span className="text-zinc-500">/{total}</span>
+              </p>
+
+              {wrongQuestions.length === 0 ? (
+                <p className="mt-4 text-center text-emerald-300">
+                  {round.isFullQuiz ? "Perfect score!" : "All correct. Every missed question is fixed."}
+                </p>
+              ) : (
+                <div className="mt-6">
+                  <p className="text-sm font-medium text-zinc-300">Missed questions</p>
+                  <ul className="mt-2 space-y-2">
+                    {wrongQuestions.map((item) => (
+                      <li key={item.id} className="rounded-lg bg-zinc-800/60 p-3 text-sm">
+                        <p className="text-zinc-200">{item.question}</p>
+                        <p className="mt-1 text-emerald-300">Answer: {item.answer}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
+                {wrongQuestions.length > 0 && (
+                  <button
+                    type="button"
+                    className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+                    onClick={() => startRound(wrongQuestions, false)}
+                  >
+                    Re-test {plural(wrongQuestions.length, "wrong answer")}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-800"
+                  onClick={() => startRound(artifact.items, true)}
+                >
+                  Retake full quiz
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex justify-between text-xs text-zinc-400">
+                <span>
+                  Question {index + 1} of {total}
+                </span>
+                <span>{score} correct</span>
+              </div>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
+                <div
+                  className="h-full bg-indigo-400 transition-all"
+                  style={{ width: `${((index + (selected !== null ? 1 : 0)) / total) * 100}%` }}
+                />
+              </div>
+
+              <h2 className="mt-6 text-xl leading-snug font-medium md:text-2xl">{question.question}</h2>
+
+              <div className="mt-6 space-y-2">
+                {question.options.map((option, optionIndex) => (
+                  <button
+                    key={option}
+                    type="button"
+                    disabled={selected !== null}
+                    className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${optionStyle(option)}`}
+                    onClick={() => choose(option)}
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-zinc-800 text-xs text-zinc-400">
+                      {optionIndex + 1}
+                    </span>
+                    <span>{option}</span>
+                  </button>
+                ))}
+              </div>
+
+              {selected !== null && (
+                <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-4" role="status">
+                  <p className={`font-medium ${selected === question.answer ? "text-emerald-300" : "text-red-300"}`}>
+                    {selected === question.answer ? "Correct" : "Not quite"}
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-300">{question.explanation}</p>
+                  <div className="mt-2">
+                    <SourceNote item={question} />
+                  </div>
+                  <button
+                    type="button"
+                    autoFocus
+                    className="mt-4 w-full rounded-lg bg-zinc-100 px-4 py-2.5 text-sm font-medium text-zinc-900 hover:bg-white sm:w-auto"
+                    onClick={next}
+                  >
+                    {index + 1 < total ? "Next question" : "See results"}
+                  </button>
+                </div>
+              )}
+
+              <p className="mt-6 hidden text-center text-xs text-zinc-600 md:block">
+                1–{question.options.length} choose · Enter next
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default QuizPlayer;
