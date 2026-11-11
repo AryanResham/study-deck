@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     // Sends /api calls to the Express server, so there are no CORS problems
     proxy: {
-      "/api": "http://localhost:3001",
+      "/api": `http://localhost:${process.env.API_PORT || 3001}`,
     },
   },
 });

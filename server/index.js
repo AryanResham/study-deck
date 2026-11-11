@@ -5,7 +5,8 @@ import { generateRoute } from "./routes/generate.js";
 import { errors, sendError } from "./lib/errors.js";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+// API_PORT, not PORT, because some tools set PORT for the frontend dev server
+const PORT = process.env.API_PORT || 3001;
 
 // Rejects bodies over 200 KB before they reach the route
 app.use(express.json({ limit: "200kb" }));
