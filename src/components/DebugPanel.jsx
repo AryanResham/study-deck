@@ -7,6 +7,7 @@ const SCENARIOS = [
   { id: "wrong_shape", label: "Wrong shape" },
   { id: "empty", label: "Empty" },
   { id: "partial_invalid", label: "3 invalid items" },
+  { id: "concerns", label: "Notes have problems" },
   { id: "rejected", label: "Rejected" },
   { id: "exhausted", label: "Notes covered" },
   { id: "slow", label: "Slow (10s)" },

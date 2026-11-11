@@ -10,6 +10,8 @@ export const buildResponseSchema = (itemsKey) => {
       // Optional, so a missing title does not throw away a set of good items
       title: z.string().optional(),
       [itemsKey]: z.array(z.unknown()),
+      // Problems the model found in the notes; anything missing or malformed becomes an empty list
+      concerns: z.array(z.string()).catch([]),
     }),
     z.object({ status: z.literal("rejected"), reason: z.string().optional() }),
     z.object({ status: z.literal("exhausted"), reason: z.string().optional() }),
@@ -83,7 +85,7 @@ export const describeRefusals = (source) => {
   ];
   if (source.kind === "notes") {
     lines.push(
-      'If the notes are too thin to make new items from, or every idea in them is already covered by the existing items, reply only with {"status": "exhausted", "reason": "<one short sentence for the student saying which>"}.',
+      'Only if you cannot write even one new item, because the notes are too thin or every idea in them is already covered by the existing items, reply only with {"status": "exhausted", "reason": "<one short sentence for the student saying which>"}.',
     );
   }
   return lines.join("\n");
@@ -96,6 +98,21 @@ export const describeSourceQuote = (source) => {
   }
   return 'For every item, set "source" to a short quote (5 to 20 words) copied word for word from the notes that supports it.';
 };
+
+// Asks the model to point out notes that contradict themselves or are clearly wrong
+// The notes stay the source; this is a consistency check, not full fact-checking
+export const describeConcerns = (source) => {
+  if (source.kind !== "notes") {
+    return "";
+  }
+  return [
+    'Also read the notes for problems. If two parts of the notes contradict each other, or a claim is clearly false by well-established knowledge, add one short sentence per problem to "concerns" (at most 3), naming the claim.',
+    "Do not write items that test a claim you listed in concerns. Write as many items as the rest of the notes allow, even if that is fewer than asked. If there are no problems, set concerns to an empty list.",
+  ].join("\n");
+};
+
+// The JSON Schema entry for concerns, shared by every generator
+export const concernsJsonSchema = { type: "array", items: { type: "string" } };
 
 // Joins prompt parts, skipping the empty ones
 export const joinPrompt = (parts) => {

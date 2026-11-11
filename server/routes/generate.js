@@ -105,11 +105,21 @@ const checkModelText = (text, request, generator) => {
   // A fallback title when the model left it out, and a cap on very long ones
   const title = (data.title || "").trim().slice(0, LIMITS.titleMax) || (request.type === "quiz" ? "Quiz" : "Flashcards");
 
+  // Only notes can contradict themselves; blank entries are dropped and long ones cut
+  const concerns =
+    request.source.kind === "notes"
+      ? data.concerns
+          .map((concern) => concern.trim().slice(0, LIMITS.concernMax))
+          .filter((concern) => concern !== "")
+          .slice(0, LIMITS.concernsMax)
+      : [];
+
   return {
     ok: true,
     response: {
       status: "ok",
       title,
+      concerns,
       // Never return more items than were asked for
       items: goodItems.slice(0, request.count),
       dropped: problems.length,

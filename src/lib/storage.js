@@ -33,6 +33,8 @@ const artifactFields = {
   messages: z.array(z.string()),
   // Optional, so sets saved before the weak-spots feature still load
   weakFocus: z.boolean().optional(),
+  // Optional, so sets saved before the notes check still load
+  concerns: z.array(z.string()).optional(),
 };
 
 const flashcardsArtifactSchema = z.object({

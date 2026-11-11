@@ -1,6 +1,8 @@
 import { z } from "zod";
 import {
   buildResponseSchema,
+  concernsJsonSchema,
+  describeConcerns,
   describeDifficulty,
   describeExisting,
   describeInstruction,
@@ -26,6 +28,7 @@ const jsonSchema = {
     status: { type: "string", enum: ["ok", "rejected", "exhausted"] },
     reason: { type: "string" },
     title: { type: "string" },
+    concerns: concernsJsonSchema,
     cards: {
       type: "array",
       items: {
@@ -57,10 +60,11 @@ const buildPrompt = (request) => {
       "- Each card tests one idea.",
     ].join("\n"),
     describeSourceQuote(request.source),
+    describeConcerns(request.source),
     describeExisting(request.existing),
     describeWeak(request.weak, request.existing),
     describeRefusals(request.source),
-    'Otherwise reply with {"status": "ok", "title": "<short title, at most 6 words>", "cards": [...]}.',
+    'Otherwise reply with {"status": "ok", "title": "<short title, at most 6 words>", "concerns": [...], "cards": [...]}.',
   ]);
 };
 

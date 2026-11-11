@@ -9,6 +9,7 @@ export const SCENARIOS = [
   "wrong_shape",
   "empty",
   "partial_invalid",
+  "concerns",
   "rejected",
   "exhausted",
   "slow",
@@ -121,6 +122,17 @@ export const getFakeModelText = async (scenario, request, attempt, signal) => {
     case "partial_invalid":
       await wait(800, signal);
       return buildPartlyInvalidText(request);
+
+    case "concerns": {
+      // Valid items, plus the kind of note problems the model is asked to point out
+      await wait(800, signal);
+      const data = JSON.parse(buildValidText(request));
+      data.concerns = [
+        "The notes say photosynthesis happens in the mitochondria in one place and in the chloroplasts in another.",
+        "The notes claim plants release carbon dioxide during photosynthesis, but they take it in.",
+      ];
+      return JSON.stringify(data);
+    }
 
     case "rejected":
       await wait(500, signal);

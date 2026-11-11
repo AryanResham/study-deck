@@ -29,6 +29,7 @@ const buildResponseSchema = (type) => {
       title: z.string(),
       items: z.array(itemSchema).min(1),
       dropped: z.number(),
+      concerns: z.array(z.string()),
     }),
     z.object({ status: z.literal("rejected"), reason: z.string() }),
     z.object({ status: z.literal("exhausted"), reason: z.string() }),

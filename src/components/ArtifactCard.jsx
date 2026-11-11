@@ -59,6 +59,22 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
             {plural(flaggedCount, itemWord(artifact.type))} may not be from your notes
           </span>
         )}
+
+        {/* Problems the AI spotted in the notes; items about those claims were left out */}
+        {artifact.concerns && artifact.concerns.length > 0 && (
+          <span className="mt-3 block rounded-lg border border-amber-500/30 bg-amber-500/5 p-2.5 text-xs text-amber-100/90">
+            <span className="flex items-center gap-1.5 font-medium text-amber-200">
+              <TriangleAlert size={14} className="shrink-0" />
+              Check your notes
+            </span>
+            {artifact.concerns.map((concern) => (
+              <span key={concern} className="mt-1 block">
+                {concern}
+              </span>
+            ))}
+            <span className="mt-1 block text-amber-100/60">A consistency check by the AI, not a full fact-check.</span>
+          </span>
+        )}
       </button>
 
       <div className="flex items-center gap-1 border-t border-zinc-800 px-2 py-1.5">

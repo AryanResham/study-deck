@@ -12,6 +12,9 @@ export const LIMITS = {
   weakTextMax: 500,
   // Longest set title we keep from the model
   titleMax: 80,
+  // At most this many note concerns per set, each at most this long
+  concernsMax: 3,
+  concernMax: 300,
 };
 
 export const COUNTS = [5, 10, 15];

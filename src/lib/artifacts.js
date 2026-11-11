@@ -68,6 +68,8 @@ export const buildArtifact = (project, options, response) => {
     messages: buildMessages(options.type, options.count, items.length, response.dropped, removed),
     progress: emptyProgress(options.type),
     weakFocus: options.weak.length > 0,
+    // Problems the model spotted in the notes, shown on the set card
+    concerns: response.concerns,
   };
 };
 
