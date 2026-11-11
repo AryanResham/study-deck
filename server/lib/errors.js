@@ -4,6 +4,8 @@ const appError = (code, message, status, retryable) => {
   error.code = code;
   error.status = status;
   error.retryable = retryable;
+  // Marks errors we made on purpose, so their message is safe to show
+  error.isAppError = true;
   return error;
 };
 
@@ -37,7 +39,7 @@ export const describeZodError = (zodError) => {
 // Sends an error to the browser in the standard { error: {...} } shape
 export const sendError = (res, error) => {
   // Unknown errors are logged and hidden behind a generic message
-  if (!error.code) {
+  if (!error.isAppError) {
     console.error(error);
     error = errors.server();
   }

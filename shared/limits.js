@@ -1,12 +1,17 @@
 // Input limits shared by the browser and the server
 export const LIMITS = {
-  topicMin: 3,
+  // 2, so short topics like "AI" or "ML" work
+  topicMin: 2,
   topicMax: 100,
-  notesMin: 200,
+  notesMin: 80,
   notesMax: 20000,
   instructionMax: 200,
   existingMax: 100,
   weakMax: 50,
+  // Longest text of one weak-spot item sent to the server
+  weakTextMax: 500,
+  // Longest set title we keep from the model
+  titleMax: 80,
 };
 
 export const COUNTS = [5, 10, 15];
@@ -19,7 +24,7 @@ export const checkSourceText = (kind, text) => {
 
   if (kind === "topic") {
     if (length < LIMITS.topicMin) {
-      return "Type a topic of at least 3 characters.";
+      return `Type a topic of at least ${LIMITS.topicMin} characters.`;
     }
     if (length > LIMITS.topicMax) {
       return "That looks like notes. Switch to Paste notes?";
@@ -28,7 +33,7 @@ export const checkSourceText = (kind, text) => {
   }
 
   if (length < LIMITS.notesMin) {
-    return "Add more content. Notes need at least 200 characters.";
+    return `Add more content. Notes need at least ${LIMITS.notesMin} characters.`;
   }
   if (length > LIMITS.notesMax) {
     return "Trim to 20,000 characters.";

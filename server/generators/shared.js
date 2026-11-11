@@ -7,7 +7,8 @@ export const buildResponseSchema = (itemsKey) => {
   return z.discriminatedUnion("status", [
     z.object({
       status: z.literal("ok"),
-      title: z.string(),
+      // Optional, so a missing title does not throw away a set of good items
+      title: z.string().optional(),
       [itemsKey]: z.array(z.unknown()),
     }),
     z.object({ status: z.literal("rejected"), reason: z.string().optional() }),
@@ -82,7 +83,7 @@ export const describeRefusals = (source) => {
   ];
   if (source.kind === "notes") {
     lines.push(
-      'If the notes have no material left that the existing items do not already cover, reply only with {"status": "exhausted", "reason": "<one short sentence>"}.',
+      'If the notes are too thin to make new items from, or every idea in them is already covered by the existing items, reply only with {"status": "exhausted", "reason": "<one short sentence for the student saying which>"}.',
     );
   }
   return lines.join("\n");

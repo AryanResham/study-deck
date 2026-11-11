@@ -28,7 +28,7 @@ const requestSchema = z.object({
   instruction: z.string().max(LIMITS.instructionMax).default(""),
   existing: z.array(z.string()).max(LIMITS.existingMax).default([]),
   // Items the student is weak on, for "practise my weak spots"
-  weak: z.array(z.string().max(500)).max(LIMITS.weakMax).default([]),
+  weak: z.array(z.string().max(LIMITS.weakTextMax)).max(LIMITS.weakMax).default([]),
 });
 
 // Checks the request body and returns a clean copy, or throws INPUT_INVALID
@@ -78,7 +78,7 @@ const checkModelText = (text, request, generator) => {
     return { ok: true, response: { status: "rejected", reason: data.reason || "This doesn't look like study material." } };
   }
   if (data.status === "exhausted") {
-    return { ok: true, response: { status: "exhausted", reason: data.reason || "Your notes are fully covered." } };
+    return { ok: true, response: { status: "exhausted", reason: data.reason || "There's nothing new left to make from these notes." } };
   }
 
   // Keep the good items and count the bad ones
@@ -102,7 +102,8 @@ const checkModelText = (text, request, generator) => {
     return { ok: false, problem: `There were no usable items${details}.` };
   }
 
-  const title = data.title.trim() || (request.type === "quiz" ? "Quiz" : "Flashcards");
+  // A fallback title when the model left it out, and a cap on very long ones
+  const title = (data.title || "").trim().slice(0, LIMITS.titleMax) || (request.type === "quiz" ? "Quiz" : "Flashcards");
 
   return {
     ok: true,

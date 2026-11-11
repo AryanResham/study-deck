@@ -79,9 +79,8 @@ const checkItem = (raw) => {
 
   const question = parsed.data;
   const options = question.options.map((option) => option.trim());
-  const answer = question.answer.trim();
 
-  if (!hasText(question.question) || !hasText(question.explanation) || !hasText(answer)) {
+  if (!hasText(question.question) || !hasText(question.explanation) || !hasText(question.answer)) {
     return { ok: false, problem: "a text field is blank" };
   }
   if (options.some((option) => option === "")) {
@@ -94,7 +93,9 @@ const checkItem = (raw) => {
     return { ok: false, problem: "two options are the same" };
   }
 
-  if (!options.includes(answer)) {
+  // Matches the answer to its option ignoring case, so "paris" still counts as "Paris"
+  const answer = options.find((option) => option.toLowerCase() === question.answer.trim().toLowerCase());
+  if (!answer) {
     return { ok: false, problem: "the answer is not one of the options" };
   }
 
