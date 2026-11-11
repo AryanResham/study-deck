@@ -25,7 +25,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
           </span>
           <button
             type="button"
-            className="rounded-md px-2 py-1 text-zinc-400 hover:bg-zinc-800 md:hidden"
+            className="rounded-md px-3 py-2 text-zinc-400 hover:bg-zinc-800 md:hidden"
             onClick={onClose}
             aria-label="Close menu"
           >
@@ -73,7 +73,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
                 </button>
                 <button
                   type="button"
-                  className="mr-1 rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-700 hover:text-zinc-100 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
+                  className="mr-1 rounded-md px-2.5 py-2.5 text-xs md:px-2 md:py-1 text-zinc-500 hover:bg-zinc-700 hover:text-zinc-100 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
                   onClick={() => handleDelete(project)}
                   aria-label={`Delete ${project.title}`}
                 >

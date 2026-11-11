@@ -16,7 +16,7 @@ const ErrorNotice = ({ title, message, tone = "error", onRetry, onDismiss, child
           {onRetry && (
             <button
               type="button"
-              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-white"
+              className="rounded-lg bg-zinc-100 px-4 py-2.5 text-sm font-medium sm:px-3 sm:py-1.5 text-zinc-900 hover:bg-white"
               onClick={onRetry}
             >
               Retry
@@ -25,7 +25,7 @@ const ErrorNotice = ({ title, message, tone = "error", onRetry, onDismiss, child
           {onDismiss && (
             <button
               type="button"
-              className="rounded-lg px-3 py-1.5 text-sm text-zinc-300 hover:bg-white/10"
+              className="rounded-lg px-4 py-2.5 text-sm text-zinc-300 hover:bg-white/10 sm:px-3 sm:py-1.5"
               onClick={onDismiss}
             >
               Dismiss

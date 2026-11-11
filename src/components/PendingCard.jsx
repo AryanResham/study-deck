@@ -22,7 +22,7 @@ const PendingCard = ({ generation, onCancel, onRetry, onDismiss }) => {
         <p className="mt-3 text-xs text-zinc-500">This usually takes 5–20 seconds.</p>
         <button
           type="button"
-          className="mt-3 self-start rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800"
+          className="mt-3 self-start rounded-lg border border-zinc-700 px-4 py-2.5 text-sm sm:px-3 sm:py-1.5 text-zinc-300 hover:bg-zinc-800"
           onClick={onCancel}
         >
           Cancel

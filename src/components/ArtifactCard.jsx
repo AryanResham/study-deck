@@ -28,7 +28,7 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
   };
 
   const smallButton =
-    "rounded-md px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
+    "rounded-md px-2.5 py-2.5 text-xs text-zinc-400 sm:px-2 sm:py-1 hover:bg-zinc-800 hover:text-zinc-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
 
   return (
     <div className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900 transition-colors hover:border-zinc-700">

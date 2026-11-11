@@ -4,7 +4,7 @@ const PlayerHeader = ({ title, subtitle, onBack, children }) => {
     <header className="flex items-center gap-3 border-b border-zinc-800 px-4 py-3 md:px-8">
       <button
         type="button"
-        className="rounded-lg px-2 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800"
+        className="rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 sm:px-2 sm:py-1.5"
         onClick={onBack}
       >
         ← Back

@@ -63,7 +63,7 @@ const ProjectView = ({
           <div className="flex items-start gap-3">
             <button
               type="button"
-              className="mt-0.5 rounded-md px-2 py-1 text-zinc-300 hover:bg-zinc-800 md:hidden"
+              className="mt-0.5 rounded-md px-3 py-2 text-zinc-300 hover:bg-zinc-800 md:hidden"
               onClick={onOpenSidebar}
               aria-label="Open projects"
             >
@@ -77,7 +77,7 @@ const ProjectView = ({
                 {isNotes && (
                   <button
                     type="button"
-                    className="text-zinc-300 underline underline-offset-2 hover:text-white"
+                    className="py-1 text-zinc-300 underline underline-offset-2 hover:text-white"
                     onClick={() => setShowSource(!showSource)}
                     aria-expanded={showSource}
                   >

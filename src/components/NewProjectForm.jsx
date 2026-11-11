@@ -39,7 +39,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
   };
 
   const tabClass = (tabMode) =>
-    `flex-1 rounded-md px-3 py-1.5 text-sm font-medium ${
+    `flex-1 rounded-md px-3 py-2.5 text-sm font-medium sm:py-1.5 ${
       mode === tabMode ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
     }`;
 
@@ -48,7 +48,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
       <div className="flex items-center gap-2 px-4 pt-4 md:hidden">
         <button
           type="button"
-          className="rounded-md px-2 py-1 text-zinc-300 hover:bg-zinc-800"
+          className="rounded-md px-3 py-2 text-zinc-300 hover:bg-zinc-800"
           onClick={onOpenSidebar}
           aria-label="Open projects"
         >
@@ -109,7 +109,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
               <div className="mt-1 flex items-center justify-between text-xs">
                 <button
                   type="button"
-                  className="text-zinc-400 underline-offset-2 hover:text-zinc-200 hover:underline"
+                  className="py-3 text-zinc-400 underline underline-offset-2 hover:text-zinc-200 sm:py-1 sm:no-underline sm:hover:underline"
                   onClick={() => setNotes(SAMPLE_NOTES)}
                 >
                   Use sample notes
@@ -148,7 +148,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
                 <button
                   key={example}
                   type="button"
-                  className="rounded-full border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:border-zinc-400 hover:text-white"
+                  className="rounded-full border border-zinc-700 px-3.5 py-2.5 text-sm sm:px-3 sm:py-1.5 text-zinc-300 hover:border-zinc-400 hover:text-white"
                   onClick={() => onCreate({ kind: "topic", text: example })}
                 >
                   {example}

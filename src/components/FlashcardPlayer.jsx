@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PlayerHeader from "./PlayerHeader.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { countCardStatuses } from "../lib/artifacts.js";
@@ -12,6 +12,8 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [isReview, setIsReview] = useState(false);
+  // Where a finger touched down, for swiping between cards on phones
+  const touchStartRef = useRef(null);
 
   const statuses = artifact.progress.cards;
   const counts = countCardStatuses(artifact);
@@ -53,6 +55,31 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
     goTo(0);
   };
 
+  // Remembers where a swipe starts
+  const handleTouchStart = (event) => {
+    touchStartRef.current = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  };
+
+  // A clear sideways swipe moves to the next card (left) or the previous one (right)
+  const handleTouchEnd = (event) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) {
+      return;
+    }
+    const movedX = event.changedTouches[0].clientX - start.x;
+    const movedY = event.changedTouches[0].clientY - start.y;
+    // Ignore taps and mostly up-and-down moves, which are scrolling
+    if (Math.abs(movedX) < 50 || Math.abs(movedX) < Math.abs(movedY)) {
+      return;
+    }
+    if (movedX < 0) {
+      next();
+    } else {
+      previous();
+    }
+  };
+
   // Listens for Space, arrows, 1 and 2
   // Re-attached on every render so the handler always sees the latest state
   useEffect(() => {
@@ -84,7 +111,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
       <PlayerHeader title={artifact.title} subtitle={roundLabel} onBack={onBack}>
         <button
           type="button"
-          className="rounded-lg px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800"
+          className="rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-1.5"
           onClick={() => startRound(shuffle(isFinished ? allIds : order), isReview)}
         >
           Shuffle
@@ -136,8 +163,10 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
             <>
               <button
                 type="button"
-                className="flip-card mt-6 block h-72 w-full text-left md:h-80"
+                className="flip-card mt-6 block h-72 w-full touch-pan-y text-left md:h-80"
                 onClick={() => setFlipped(!flipped)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
                 aria-label={flipped ? "Show question" : "Show answer"}
               >
                 {/* The key restarts the card for each new card, so the flip back is not animated */}
@@ -147,7 +176,8 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                     <div className="flex flex-1 items-center justify-center overflow-y-auto">
                       <p className="text-center text-xl leading-snug font-medium md:text-2xl">{card.front}</p>
                     </div>
-                    <span className="text-center text-xs text-zinc-500">Tap or press Space to flip</span>
+                    <span className="text-center text-xs text-zinc-500 md:hidden">Tap to flip · swipe to move</span>
+                    <span className="hidden text-center text-xs text-zinc-500 md:inline">Tap or press Space to flip</span>
                   </div>
                   <div className="flip-card-face flip-card-back flex flex-col rounded-2xl border border-zinc-600 bg-zinc-800 p-6">
                     <span className="text-xs tracking-wide text-zinc-400 uppercase">Answer</span>
@@ -179,7 +209,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
               <div className="mt-4 flex items-center justify-between">
                 <button
                   type="button"
-                  className="rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-40"
+                  className="rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2 disabled:opacity-40"
                   disabled={index === 0}
                   onClick={previous}
                 >
@@ -192,7 +222,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                 </span>
                 <button
                   type="button"
-                  className="rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800"
+                  className="rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2"
                   onClick={next}
                 >
                   Next →
