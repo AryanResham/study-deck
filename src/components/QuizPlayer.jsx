@@ -86,18 +86,30 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
     return () => window.removeEventListener("keydown", handleKey);
   });
 
-  // Styles an option after the question is answered: the right one stands out, the rest fade
+  // Styles an option after the question is answered: soft green for the right one,
+  // soft red for a wrong pick, and the rest fade
   const optionStyle = (option) => {
     if (selected === null) {
       return "border-zinc-700 bg-zinc-900 hover:border-zinc-500 hover:bg-zinc-800";
     }
     if (option === question.answer) {
-      return "border-zinc-200 bg-zinc-800 text-white";
+      return "border-emerald-500/50 bg-emerald-500/10 text-emerald-100";
     }
     if (option === selected) {
-      return "border-zinc-600 bg-zinc-900 text-zinc-400 line-through";
+      return "border-red-500/50 bg-red-500/10 text-red-200";
     }
     return "border-zinc-800 bg-zinc-900 text-zinc-500";
+  };
+
+  // Colours the small box before an option to match
+  const markerStyle = (option) => {
+    if (selected !== null && option === question.answer) {
+      return "bg-emerald-500/20 text-emerald-300";
+    }
+    if (selected !== null && option === selected) {
+      return "bg-red-500/20 text-red-300";
+    }
+    return "bg-zinc-800 text-zinc-400";
   };
 
   // The small box before an option: its number, then a tick or a cross after answering
@@ -141,7 +153,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                     {wrongQuestions.map((item) => (
                       <li key={item.id} className="rounded-lg bg-zinc-800/60 p-3 text-sm">
                         <p className="text-zinc-200">{item.question}</p>
-                        <p className="mt-1 text-zinc-400">Answer: {item.answer}</p>
+                        <p className="mt-1 text-emerald-300/90">Answer: {item.answer}</p>
                       </li>
                     ))}
                   </ul>
@@ -193,7 +205,9 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                     className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${optionStyle(option)}`}
                     onClick={() => choose(option)}
                   >
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-zinc-800 text-xs text-zinc-400">
+                    <span
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs ${markerStyle(option)}`}
+                    >
                       {optionMarker(option, optionIndex)}
                     </span>
                     <span>{option}</span>
@@ -203,7 +217,11 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
 
               {selected !== null && (
                 <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-4" role="status">
-                  <p className="flex items-center gap-1.5 font-medium text-white">
+                  <p
+                    className={`flex items-center gap-1.5 font-medium ${
+                      selected === question.answer ? "text-emerald-300" : "text-red-300"
+                    }`}
+                  >
                     {selected === question.answer ? <Check size={18} /> : <X size={18} />}
                     {selected === question.answer ? "Correct" : "Not quite"}
                   </p>
