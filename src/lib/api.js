@@ -3,17 +3,37 @@ import { z } from "zod";
 // The browser gives up a little after the backend's own 25 second timeout
 const CLIENT_TIMEOUT_MS = 30000;
 
-// Light check of a successful response, in case something other than our backend answered
-const responseSchema = z.discriminatedUnion("status", [
-  z.object({
-    status: z.literal("ok"),
-    title: z.string(),
-    items: z.array(z.record(z.string(), z.unknown())).min(1),
-    dropped: z.number(),
-  }),
-  z.object({ status: z.literal("rejected"), reason: z.string() }),
-  z.object({ status: z.literal("exhausted"), reason: z.string() }),
-]);
+// Shapes of one card and one question, so a bad item can never reach the players
+const cardSchema = z.object({
+  front: z.string().min(1),
+  back: z.string().min(1),
+  source: z.string(),
+});
+
+const questionSchema = z
+  .object({
+    question: z.string().min(1),
+    options: z.array(z.string().min(1)).min(2),
+    answer: z.string(),
+    explanation: z.string(),
+    source: z.string(),
+  })
+  .refine((question) => question.options.includes(question.answer), "answer is not one of the options");
+
+// Check of a successful response, in case something other than our backend answered
+const buildResponseSchema = (type) => {
+  const itemSchema = type === "quiz" ? questionSchema : cardSchema;
+  return z.discriminatedUnion("status", [
+    z.object({
+      status: z.literal("ok"),
+      title: z.string(),
+      items: z.array(itemSchema).min(1),
+      dropped: z.number(),
+    }),
+    z.object({ status: z.literal("rejected"), reason: z.string() }),
+    z.object({ status: z.literal("exhausted"), reason: z.string() }),
+  ]);
+};
 
 // Shape of an error from our backend
 const errorSchema = z.object({
@@ -79,10 +99,14 @@ export const generateArtifact = async (request, signal, debugScenario) => {
       const { code, message, retryable } = parsedError.data.error;
       throw apiError(code, message, retryable);
     }
+    // In development, Vite answers an empty 502 when the API server is not running
+    if (body === null && response.status >= 502 && response.status <= 504) {
+      throw apiError("NETWORK_ERROR", "Couldn't reach the API server. Check that it is running.", true);
+    }
     throw apiError("BAD_RESPONSE", `The server answered with an unexpected error (${response.status}).`, true);
   }
 
-  const parsed = responseSchema.safeParse(body);
+  const parsed = buildResponseSchema(request.type).safeParse(body);
   if (!parsed.success) {
     throw apiError("BAD_RESPONSE", "The server sent back something unexpected.", true);
   }

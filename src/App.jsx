@@ -11,8 +11,9 @@ import { getProjectItemTexts } from "./lib/checks.js";
 import { createId } from "./lib/utils.js";
 import { LIMITS } from "../shared/limits.js";
 
-// The failure test panel shows when the URL has ?debug=1
-const DEBUG_MODE = new URLSearchParams(window.location.search).get("debug") === "1";
+// The failure test panel shows when the URL has ?debug=1, only in development
+// (the production server ignores fake scenarios, so the panel would do nothing there)
+const DEBUG_MODE = import.meta.env.DEV && new URLSearchParams(window.location.search).get("debug") === "1";
 
 // Makes a short project title from the topic or the first line of the notes
 const makeProjectTitle = (source) => {
@@ -24,7 +25,10 @@ const makeProjectTitle = (source) => {
 };
 
 const App = () => {
-  const [projects, setProjects] = useState(loadProjects);
+  // Loads saved data once; the warning says if any of it had to be left out
+  const [loaded] = useState(loadProjects);
+  const [projects, setProjects] = useState(loaded.projects);
+  const [loadWarning, setLoadWarning] = useState(loaded.warning);
   // Opens the most recent project on start, or the new project form if there are none
   const [selectedId, setSelectedId] = useState(projects.length > 0 ? projects[0].id : null);
   // Running or finished-with-a-message generations, keyed by project id
@@ -151,11 +155,10 @@ const App = () => {
     try {
       const response = await generateArtifact(request, controller.signal, debugScenario);
 
-      // Cancelled or replaced while waiting, so this answer is stale
-      if (controllersRef.current[projectId] !== controller) {
+      // Cancelled while waiting (or the project was deleted), so this answer is stale
+      if (controller.signal.aborted) {
         return;
       }
-      delete controllersRef.current[projectId];
 
       if (response.status === "rejected" || response.status === "exhausted") {
         setGeneration(projectId, { status: response.status, options, message: response.reason });
@@ -180,17 +183,26 @@ const App = () => {
       );
       clearGeneration(projectId);
     } catch (error) {
-      if (controllersRef.current[projectId] !== controller) {
+      // A cancelled request shows no error
+      if (controller.signal.aborted) {
         return;
       }
-      delete controllersRef.current[projectId];
+      // Errors from api.js have a code; anything else is a bug in our own code
+      if (!error.code) {
+        console.error(error);
+      }
       setGeneration(projectId, {
         status: "error",
         options,
-        message: error.message,
+        message: error.code ? error.message : "Something went wrong while saving the result.",
         code: error.code,
-        retryable: error.retryable,
+        retryable: error.code ? error.retryable : true,
       });
+    } finally {
+      // Frees the project for its next generation, unless a newer one already took its place
+      if (controllersRef.current[projectId] === controller) {
+        delete controllersRef.current[projectId];
+      }
     }
   };
 
@@ -213,6 +225,17 @@ const App = () => {
         {storageError && (
           <div className="px-4 pt-4 md:px-8">
             <ErrorNotice title="Not saved" message={storageError} />
+          </div>
+        )}
+
+        {loadWarning && (
+          <div className="px-4 pt-4 md:px-8">
+            <ErrorNotice
+              tone="info"
+              title="Some saved data was left out"
+              message={loadWarning}
+              onDismiss={() => setLoadWarning(null)}
+            />
           </div>
         )}
 
