@@ -1,5 +1,5 @@
 import { getProjectItemTexts, isQuoteInNotes, removeDuplicates } from "./checks.js";
-import { plural } from "./utils.js";
+import { createId, plural } from "./utils.js";
 import { LIMITS } from "../../shared/limits.js";
 
 // What one item is called in messages
@@ -53,11 +53,11 @@ export const buildArtifact = (project, options, response) => {
     if (project.source.kind === "notes") {
       sourceFound = isQuoteInNotes(item.source, project.source.text);
     }
-    return { ...item, id: crypto.randomUUID(), sourceFound };
+    return { ...item, id: createId(), sourceFound };
   });
 
   return {
-    id: crypto.randomUUID(),
+    id: createId(),
     type: options.type,
     title: response.title,
     createdAt: Date.now(),

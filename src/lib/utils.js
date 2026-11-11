@@ -1,3 +1,14 @@
+// Makes a random id for projects, sets and items
+// crypto.randomUUID only exists on HTTPS or localhost, so on a plain http network
+// address (like a phone on the same Wi-Fi) we build one from random bytes instead
+export const createId = () => {
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+};
+
 // Returns a shuffled copy of a list (Fisher-Yates), leaving the original alone
 export const shuffle = (items) => {
   const copy = [...items];

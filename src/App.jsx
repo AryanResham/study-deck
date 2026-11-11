@@ -8,6 +8,7 @@ import { loadProjects, saveProjects } from "./lib/storage.js";
 import { generateArtifact } from "./lib/api.js";
 import { buildArtifact } from "./lib/artifacts.js";
 import { getProjectItemTexts } from "./lib/checks.js";
+import { createId } from "./lib/utils.js";
 import { LIMITS } from "../shared/limits.js";
 
 // The failure test panel shows when the URL has ?debug=1
@@ -65,7 +66,7 @@ const App = () => {
   // Creates a project from a topic or notes and opens it
   const createProject = (source) => {
     const project = {
-      id: crypto.randomUUID(),
+      id: createId(),
       title: makeProjectTitle(source),
       createdAt: Date.now(),
       source,
