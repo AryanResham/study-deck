@@ -3,7 +3,7 @@ import { Check, X } from "lucide-react";
 import PlayerHeader from "./PlayerHeader.jsx";
 import KeyHints from "./KeyHints.jsx";
 import SourceNote from "./SourceNote.jsx";
-import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
+import { isOnButton, plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
 
 // Copies the questions in a new random order, each with its options shuffled too
 // Runs at the start of every round, so a retake or re-test never repeats the same order
@@ -68,7 +68,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
     setIsFinished(false);
   };
 
-  // Keys 1 to 5 pick an option, Enter moves on
+  // Keys 1 to 5 pick an option, Enter moves on (but Enter on a focused button presses that button)
   // Re-attached on every render so the handler always sees the latest state
   useEffect(() => {
     const handleKey = (event) => {
@@ -78,8 +78,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
       const number = Number(event.key);
       if (number >= 1 && number <= question.options.length) {
         choose(question.options[number - 1]);
-      } else if (event.key === "Enter") {
-        event.preventDefault();
+      } else if (event.key === "Enter" && !isOnButton(event)) {
         next();
       }
     };

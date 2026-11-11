@@ -32,3 +32,9 @@ export const shouldIgnoreKey = (event) => {
   }
   return event.ctrlKey || event.metaKey || event.altKey;
 };
+
+// True when a button or link has focus, so Enter and Space should press it instead of our shortcut
+export const isOnButton = (event) => {
+  const tag = event.target.tagName;
+  return tag === "BUTTON" || tag === "A";
+};

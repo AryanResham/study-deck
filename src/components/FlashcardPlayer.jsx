@@ -4,7 +4,7 @@ import PlayerHeader from "./PlayerHeader.jsx";
 import KeyHints from "./KeyHints.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { countCardStatuses } from "../lib/artifacts.js";
-import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
+import { isOnButton, plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
 
 // Flip through cards and mark each one "Got it" or "Still learning"
 const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
@@ -89,7 +89,9 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
       if (shouldIgnoreKey(event) || isFinished) {
         return;
       }
-      if (event.key === " ") {
+      // On a focused button Space presses that button (the card itself is a button, so it still flips)
+      if (event.key === " " && !isOnButton(event)) {
+        // Stops the page from scrolling
         event.preventDefault();
         setFlipped(!flipped);
       } else if (event.key === "ArrowRight") {
@@ -114,7 +116,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
         <button
           type="button"
           className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-1.5"
-          onClick={() => startRound(shuffle(isFinished ? allIds : order), isReview)}
+          onClick={() => startRound(shuffle(isFinished ? allIds : order), isFinished ? false : isReview)}
         >
           <Shuffle size={16} />
           Shuffle

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { COUNTS, DIFFICULTIES, LIMITS } from "../../shared/limits.js";
 import { plural } from "../lib/utils.js";
@@ -50,14 +50,32 @@ const GenerateDialog = ({ type, preset, base, baseMode, weakItems, onGenerate, o
   const [difficulty, setDifficulty] = useState(preset.difficulty);
   const [instruction, setInstruction] = useState(preset.instruction);
   const [useWeak, setUseWeak] = useState(false);
+  // The popup box, used to keep keyboard focus inside it
+  const formRef = useRef(null);
 
   const isQuiz = type === "quiz";
 
-  // Closes the popup with the Escape key
+  // Closes the popup with Escape, and keeps Tab inside the popup
   useEffect(() => {
     const handleKey = (event) => {
       if (event.key === "Escape") {
         onClose();
+        return;
+      }
+      if (event.key !== "Tab") {
+        return;
+      }
+      const focusable = formRef.current.querySelectorAll("button, textarea");
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const inside = formRef.current.contains(document.activeElement);
+      // Shift+Tab on the first control wraps to the last one, and Tab on the last wraps to the first
+      if (event.shiftKey && (document.activeElement === first || !inside)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !inside)) {
+        event.preventDefault();
+        first.focus();
       }
     };
     window.addEventListener("keydown", handleKey);
@@ -93,6 +111,7 @@ const GenerateDialog = ({ type, preset, base, baseMode, weakItems, onGenerate, o
     // Clicking the dark backdrop closes the popup; on phones it slides up from the bottom
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center sm:p-4" onClick={onClose}>
       <form
+        ref={formRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="generate-title"
