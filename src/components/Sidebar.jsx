@@ -75,7 +75,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
                 </button>
                 <button
                   type="button"
-                  className="mr-1 rounded-md p-2.5 text-zinc-500 hover:bg-zinc-700 hover:text-zinc-100 md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
+                  className="mr-1 rounded-md p-2.5 text-zinc-500 hover:bg-red-500/10 hover:text-red-400 md:p-1.5 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
                   onClick={() => handleDelete(project)}
                   aria-label={`Delete ${project.title}`}
                   title="Delete project"

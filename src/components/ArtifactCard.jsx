@@ -75,7 +75,7 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
         </button>
         <button
           type="button"
-          className={`${smallButton} ml-auto`}
+          className="ml-auto rounded-md px-2.5 py-2.5 text-zinc-400 hover:bg-red-500/10 hover:text-red-400 sm:px-2 sm:py-1"
           onClick={handleDelete}
           aria-label={`Delete ${artifact.title}`}
           title="Delete"
