@@ -77,7 +77,7 @@ const ProjectView = ({
                 {isNotes && (
                   <button
                     type="button"
-                    className="text-indigo-300 hover:text-indigo-200"
+                    className="text-zinc-300 underline underline-offset-2 hover:text-white"
                     onClick={() => setShowSource(!showSource)}
                     aria-expanded={showSource}
                   >
@@ -94,7 +94,7 @@ const ProjectView = ({
             </p>
           )}
           {!isNotes && (
-            <p className="mt-3 text-xs text-amber-200/80">
+            <p className="mt-3 text-xs text-zinc-500">
               Generated from general knowledge. Verify important facts.
             </p>
           )}

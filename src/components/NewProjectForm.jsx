@@ -55,7 +55,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
           ☰
         </button>
         <span className="font-semibold">
-          Study<span className="text-indigo-400">Deck</span>
+          Study<span className="text-zinc-500">Deck</span>
         </span>
       </div>
 
@@ -86,7 +86,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
                 id="topic"
                 type="text"
                 autoFocus
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base placeholder:text-zinc-500 focus:border-indigo-400 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base placeholder:text-zinc-500 focus:border-zinc-400 focus:outline-none"
                 placeholder="e.g. The French Revolution"
                 value={topic}
                 onChange={(event) => setTopic(event.target.value)}
@@ -101,7 +101,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
                 id="notes"
                 autoFocus
                 rows={12}
-                className="w-full resize-y rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base leading-relaxed placeholder:text-zinc-500 focus:border-indigo-400 focus:outline-none"
+                className="w-full resize-y rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base leading-relaxed placeholder:text-zinc-500 focus:border-zinc-400 focus:outline-none"
                 placeholder="Paste your lecture notes, a textbook section, or an article..."
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
@@ -114,7 +114,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
                 >
                   Use sample notes
                 </button>
-                <span className={notes.trim().length > LIMITS.notesMax ? "text-red-300" : "text-zinc-500"}>
+                <span className={notes.trim().length > LIMITS.notesMax ? "text-zinc-100" : "text-zinc-500"}>
                   {notes.trim().length.toLocaleString()} / {LIMITS.notesMax.toLocaleString()}
                 </span>
               </div>
@@ -122,10 +122,10 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
           )}
 
           {showProblem && (
-            <p className="mt-3 text-sm text-red-300" role="alert">
+            <p className="mt-3 text-sm text-zinc-300" role="alert">
               {problem}{" "}
               {mode === "topic" && isTooLong && (
-                <button type="button" className="font-medium text-indigo-300 underline" onClick={moveTopicToNotes}>
+                <button type="button" className="font-medium text-white underline" onClick={moveTopicToNotes}>
                   Switch
                 </button>
               )}
@@ -134,7 +134,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
 
           <button
             type="submit"
-            className="mt-5 w-full rounded-lg bg-indigo-500 px-4 py-3 font-medium text-white hover:bg-indigo-400 sm:w-auto"
+            className="mt-5 w-full rounded-lg bg-zinc-100 px-4 py-3 font-medium text-zinc-900 hover:bg-white sm:w-auto"
           >
             Create project
           </button>
@@ -148,7 +148,7 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
                 <button
                   key={example}
                   type="button"
-                  className="rounded-full border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:border-indigo-400 hover:text-white"
+                  className="rounded-full border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:border-zinc-400 hover:text-white"
                   onClick={() => onCreate({ kind: "topic", text: example })}
                 >
                   {example}

@@ -4,7 +4,7 @@ const SourceNote = ({ item }) => {
     return <p className="text-xs text-zinc-500">From your notes: “{item.source}”</p>;
   }
   if (item.sourceFound === false) {
-    return <p className="text-xs text-amber-300">⚠ May not be from your notes</p>;
+    return <p className="text-xs text-zinc-400">⚠ May not be from your notes</p>;
   }
   // Topic mode has nothing to check against
   return null;

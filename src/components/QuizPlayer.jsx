@@ -82,18 +82,29 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
     return () => window.removeEventListener("keydown", handleKey);
   });
 
-  // Colours an option after the question is answered
+  // Styles an option after the question is answered: the right one stands out, the rest fade
   const optionStyle = (option) => {
     if (selected === null) {
       return "border-zinc-700 bg-zinc-900 hover:border-zinc-500 hover:bg-zinc-800";
     }
     if (option === question.answer) {
-      return "border-emerald-400/60 bg-emerald-400/10 text-emerald-100";
+      return "border-zinc-200 bg-zinc-800 text-white";
     }
     if (option === selected) {
-      return "border-red-400/60 bg-red-400/10 text-red-100";
+      return "border-zinc-600 bg-zinc-900 text-zinc-400 line-through";
     }
     return "border-zinc-800 bg-zinc-900 text-zinc-500";
+  };
+
+  // The small box before an option: its number, then ✓ or ✗ after answering
+  const optionMarker = (option, optionIndex) => {
+    if (selected !== null && option === question.answer) {
+      return "✓";
+    }
+    if (selected !== null && option === selected) {
+      return "✗";
+    }
+    return optionIndex + 1;
   };
 
   const bestScore = artifact.progress.attempts.reduce((best, attempt) => Math.max(best, attempt.score), 0);
@@ -116,7 +127,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
               </p>
 
               {wrongQuestions.length === 0 ? (
-                <p className="mt-4 text-center text-emerald-300">
+                <p className="mt-4 text-center text-zinc-200">
                   {round.isFullQuiz ? "Perfect score!" : "All correct. Every missed question is fixed."}
                 </p>
               ) : (
@@ -126,7 +137,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                     {wrongQuestions.map((item) => (
                       <li key={item.id} className="rounded-lg bg-zinc-800/60 p-3 text-sm">
                         <p className="text-zinc-200">{item.question}</p>
-                        <p className="mt-1 text-emerald-300">Answer: {item.answer}</p>
+                        <p className="mt-1 text-zinc-400">Answer: {item.answer}</p>
                       </li>
                     ))}
                   </ul>
@@ -137,7 +148,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                 {wrongQuestions.length > 0 && (
                   <button
                     type="button"
-                    className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+                    className="rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-white"
                     onClick={() => startRound(wrongQuestions, false)}
                   >
                     Re-test {plural(wrongQuestions.length, "wrong answer")}
@@ -162,7 +173,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
                 <div
-                  className="h-full bg-indigo-400 transition-all"
+                  className="h-full bg-zinc-200 transition-all"
                   style={{ width: `${((index + (selected !== null ? 1 : 0)) / total) * 100}%` }}
                 />
               </div>
@@ -179,7 +190,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                     onClick={() => choose(option)}
                   >
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-zinc-800 text-xs text-zinc-400">
-                      {optionIndex + 1}
+                      {optionMarker(option, optionIndex)}
                     </span>
                     <span>{option}</span>
                   </button>
@@ -188,8 +199,8 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
 
               {selected !== null && (
                 <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-4" role="status">
-                  <p className={`font-medium ${selected === question.answer ? "text-emerald-300" : "text-red-300"}`}>
-                    {selected === question.answer ? "Correct" : "Not quite"}
+                  <p className="font-medium text-white">
+                    {selected === question.answer ? "✓ Correct" : "✗ Not quite"}
                   </p>
                   <p className="mt-1 text-sm text-zinc-300">{question.explanation}</p>
                   <div className="mt-2">

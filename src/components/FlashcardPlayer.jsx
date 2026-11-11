@@ -103,8 +103,8 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
             </span>
           </div>
           <div className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-zinc-800">
-            <div className="bg-emerald-400" style={{ width: `${(counts.known / artifact.items.length) * 100}%` }} />
-            <div className="bg-amber-400" style={{ width: `${(counts.learning / artifact.items.length) * 100}%` }} />
+            <div className="bg-zinc-200" style={{ width: `${(counts.known / artifact.items.length) * 100}%` }} />
+            <div className="bg-zinc-500" style={{ width: `${(counts.learning / artifact.items.length) * 100}%` }} />
           </div>
 
           {isFinished ? (
@@ -117,7 +117,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                 {learningIds.length > 0 && (
                   <button
                     type="button"
-                    className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+                    className="rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-white"
                     onClick={() => startRound(learningIds, true)}
                   >
                     Review the {plural(learningIds.length, "card")} I'm still learning
@@ -149,8 +149,8 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                     </div>
                     <span className="text-center text-xs text-zinc-500">Tap or press Space to flip</span>
                   </div>
-                  <div className="flip-card-face flip-card-back flex flex-col rounded-2xl border border-indigo-500/40 bg-zinc-800 p-6">
-                    <span className="text-xs tracking-wide text-indigo-300 uppercase">Answer</span>
+                  <div className="flip-card-face flip-card-back flex flex-col rounded-2xl border border-zinc-600 bg-zinc-800 p-6">
+                    <span className="text-xs tracking-wide text-zinc-400 uppercase">Answer</span>
                     <div className="flex flex-1 items-center justify-center overflow-y-auto">
                       <p className="text-center text-lg leading-relaxed md:text-xl">{card.back}</p>
                     </div>
@@ -162,14 +162,14 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm font-medium text-amber-200 hover:bg-amber-400/20"
+                  className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-200 hover:bg-zinc-800"
                   onClick={() => mark("learning")}
                 >
                   Still learning
                 </button>
                 <button
                   type="button"
-                  className="rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm font-medium text-emerald-200 hover:bg-emerald-400/20"
+                  className="rounded-lg bg-zinc-100 px-4 py-3 text-sm font-medium text-zinc-900 hover:bg-white"
                   onClick={() => mark("known")}
                 >
                   Got it
@@ -187,8 +187,8 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                 </button>
                 <span className="text-sm text-zinc-400">
                   {index + 1} / {order.length}
-                  {statuses[card.id] === "known" && <span className="ml-2 text-emerald-300">✓ known</span>}
-                  {statuses[card.id] === "learning" && <span className="ml-2 text-amber-300">learning</span>}
+                  {statuses[card.id] === "known" && <span className="ml-2 text-zinc-200">✓ known</span>}
+                  {statuses[card.id] === "learning" && <span className="ml-2 text-zinc-500">learning</span>}
                 </span>
                 <button
                   type="button"

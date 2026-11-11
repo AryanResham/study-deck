@@ -46,7 +46,7 @@ const ActionBar = ({ disabled, onGenerate }) => {
           <button
             type="button"
             disabled={disabled}
-            className={`${mainButton} bg-indigo-500 text-white hover:bg-indigo-400`}
+            className={`${mainButton} bg-zinc-100 text-zinc-900 hover:bg-white`}
             onClick={() => generate("flashcards")}
           >
             + Flashcards
@@ -54,7 +54,7 @@ const ActionBar = ({ disabled, onGenerate }) => {
           <button
             type="button"
             disabled={disabled}
-            className={`${mainButton} bg-zinc-100 text-zinc-900 hover:bg-white`}
+            className={`${mainButton} border border-zinc-700 bg-zinc-900 text-zinc-100 hover:bg-zinc-800`}
             onClick={() => generate("quiz")}
           >
             + Quiz
@@ -81,7 +81,7 @@ const ActionBar = ({ disabled, onGenerate }) => {
             type="text"
             maxLength={LIMITS.instructionMax}
             disabled={disabled}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 pr-16 pl-3 text-sm placeholder:text-zinc-500 focus:border-indigo-400 focus:outline-none disabled:opacity-50"
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 pr-16 pl-3 text-sm placeholder:text-zinc-500 focus:border-zinc-400 focus:outline-none disabled:opacity-50"
             placeholder="Optional focus, e.g. only the light reactions"
             value={instruction}
             onChange={(event) => setInstruction(event.target.value)}

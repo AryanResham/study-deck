@@ -3,8 +3,8 @@
 const ErrorNotice = ({ title, message, tone = "error", onRetry, onDismiss, children }) => {
   const colors =
     tone === "error"
-      ? "border-red-500/40 bg-red-500/10 text-red-200"
-      : "border-zinc-700 bg-zinc-800/60 text-zinc-200";
+      ? "border-zinc-600 bg-zinc-900 text-zinc-100"
+      : "border-zinc-800 bg-zinc-900 text-zinc-200";
 
   return (
     <div className={`rounded-xl border p-4 ${colors}`} role={tone === "error" ? "alert" : "status"}>

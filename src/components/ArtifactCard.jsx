@@ -35,7 +35,7 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
       <button type="button" className="flex-1 p-4 text-left" onClick={onOpen}>
         <span
           className={`inline-block rounded-md px-2 py-0.5 text-xs font-medium ${
-            isQuiz ? "bg-emerald-500/15 text-emerald-300" : "bg-indigo-500/15 text-indigo-300"
+            "bg-zinc-800 text-zinc-300"
           }`}
         >
           {isQuiz ? "Quiz" : "Flashcards"}
@@ -55,7 +55,7 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
           </span>
         ))}
         {flaggedCount > 0 && (
-          <span className="mt-1 block text-xs text-amber-300">
+          <span className="mt-1 block text-xs text-zinc-400">
             ⚠ {plural(flaggedCount, itemWord(artifact.type))} may not be from your notes
           </span>
         )}
@@ -74,7 +74,7 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
         >
           Harder
         </button>
-        <button type="button" className={`${smallButton} ml-auto hover:text-red-300`} onClick={handleDelete}>
+        <button type="button" className={`${smallButton} ml-auto hover:text-zinc-100`} onClick={handleDelete}>
           Delete
         </button>
       </div>

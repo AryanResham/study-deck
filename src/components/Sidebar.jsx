@@ -21,7 +21,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
       >
         <div className="flex items-center justify-between px-4 pt-5 pb-3">
           <span className="text-lg font-semibold tracking-tight">
-            Study<span className="text-indigo-400">Deck</span>
+            Study<span className="text-zinc-500">Deck</span>
           </span>
           <button
             type="button"
@@ -36,7 +36,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
         <div className="px-3">
           <button
             type="button"
-            className="w-full rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+            className="w-full rounded-lg bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 hover:bg-white"
             onClick={onNew}
           >
             + New project
@@ -64,7 +64,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
                       {project.title}
                     </span>
                     {isGenerating && (
-                      <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-indigo-400" title="Generating" />
+                      <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-zinc-300" title="Generating" />
                     )}
                   </span>
                   <span className="block text-xs text-zinc-500">
@@ -73,7 +73,7 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
                 </button>
                 <button
                   type="button"
-                  className="mr-1 rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-700 hover:text-red-300 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
+                  className="mr-1 rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-700 hover:text-zinc-100 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
                   onClick={() => handleDelete(project)}
                   aria-label={`Delete ${project.title}`}
                 >
