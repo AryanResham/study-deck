@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Turn notes or a topic into flashcards and quizzes with an AI model.",
   "engines": {
-    "node": ">=20.12"
+    "node": ">=22.12"
   },
   "scripts": {
     "start": "concurrently -k -n api,web -c blue,green \"npm:server\" \"npm:client\"",
