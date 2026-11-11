@@ -31,6 +31,8 @@ const artifactFields = {
   difficulty: z.enum(["easy", "medium", "hard"]),
   instruction: z.string(),
   messages: z.array(z.string()),
+  // Optional, so sets saved before the weak-spots feature still load
+  weakFocus: z.boolean().optional(),
 };
 
 const flashcardsArtifactSchema = z.object({
@@ -47,7 +49,14 @@ const quizArtifactSchema = z.object({
   type: z.literal("quiz"),
   items: z.array(questionSchema),
   progress: z.object({
-    attempts: z.array(z.object({ score: z.number(), total: z.number(), date: z.number() })),
+    attempts: z.array(
+      z.object({
+        score: z.number(),
+        total: z.number(),
+        date: z.number(),
+        wrongIds: z.array(z.string()).optional(),
+      }),
+    ),
   }),
 });
 

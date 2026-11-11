@@ -7,6 +7,7 @@ import {
   describeRefusals,
   describeSource,
   describeSourceQuote,
+  describeWeak,
   hasText,
   joinPrompt,
 } from "./shared.js";
@@ -62,6 +63,7 @@ const buildPrompt = (request) => {
     ].join("\n"),
     describeSourceQuote(request.source),
     describeExisting(request.existing),
+    describeWeak(request.weak, request.existing),
     describeRefusals(request.source),
     'Otherwise reply with {"status": "ok", "title": "<short title, at most 6 words>", "questions": [...]}.',
   ]);

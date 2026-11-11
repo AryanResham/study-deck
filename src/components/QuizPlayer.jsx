@@ -50,8 +50,10 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
     }
     setIsFinished(true);
     // Only full runs count as attempts; re-tests are practice
+    // The missed questions are saved too, for "practise my weak spots"
     if (round.isFullQuiz) {
-      const attempt = { score, total, date: Date.now() };
+      const wrongIds = wrongQuestions.map((item) => item.id);
+      const attempt = { score, total, date: Date.now(), wrongIds };
       onProgress({ attempts: [...artifact.progress.attempts, attempt] });
     }
   };

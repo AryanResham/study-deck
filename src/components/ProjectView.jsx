@@ -5,7 +5,8 @@ import ArtifactCard from "./ArtifactCard.jsx";
 import PendingCard from "./PendingCard.jsx";
 import FlashcardPlayer from "./FlashcardPlayer.jsx";
 import QuizPlayer from "./QuizPlayer.jsx";
-import { getHarderDifficulty } from "../lib/artifacts.js";
+import GenerateDialog from "./GenerateDialog.jsx";
+import { getHarderDifficulty, getWeakItems } from "../lib/artifacts.js";
 import { plural } from "../lib/utils.js";
 
 // One project: its source, its flashcard sets and quizzes, and the action bar
@@ -21,28 +22,35 @@ const ProjectView = ({
 }) => {
   const [openArtifactId, setOpenArtifactId] = useState(null);
   const [showSource, setShowSource] = useState(false);
+  // The generate popup: null when closed, otherwise what it should start with
+  const [dialog, setDialog] = useState(null);
+  // The last count and level used, so the next popup starts with them
+  const [lastSettings, setLastSettings] = useState({ count: 10, difficulty: "medium" });
 
   const isLoading = generation?.status === "loading";
   const openArtifact = project.artifacts.find((artifact) => artifact.id === openArtifactId);
 
-  // Same type and settings, new items
-  const moreLikeThis = (artifact) => {
-    onGenerate({
+  // Opens the popup for a brand new set
+  const openNewDialog = (type) => {
+    setDialog({ type, preset: { ...lastSettings, instruction: "" }, base: null, baseMode: null });
+  };
+
+  // Opens the popup filled in from an existing set: same settings, or one level harder
+  const openFollowUpDialog = (artifact, baseMode) => {
+    const difficulty = baseMode === "harder" ? getHarderDifficulty(artifact.difficulty) : artifact.difficulty;
+    setDialog({
       type: artifact.type,
-      count: artifact.count,
-      difficulty: artifact.difficulty,
-      instruction: artifact.instruction,
+      preset: { count: artifact.count, difficulty, instruction: artifact.instruction },
+      base: artifact,
+      baseMode,
     });
   };
 
-  // Same type and settings, one level harder
-  const harder = (artifact) => {
-    onGenerate({
-      type: artifact.type,
-      count: artifact.count,
-      difficulty: getHarderDifficulty(artifact.difficulty),
-      instruction: artifact.instruction,
-    });
+  // Closes the popup and starts the generation
+  const generateFromDialog = (options) => {
+    setDialog(null);
+    setLastSettings({ count: options.count, difficulty: options.difficulty });
+    onGenerate(options);
   };
 
   // A player takes over the whole area while it is open
@@ -120,8 +128,8 @@ const ProjectView = ({
                 artifact={artifact}
                 isBusy={isLoading}
                 onOpen={() => setOpenArtifactId(artifact.id)}
-                onMoreLikeThis={() => moreLikeThis(artifact)}
-                onHarder={() => harder(artifact)}
+                onMoreLikeThis={() => openFollowUpDialog(artifact, "more")}
+                onHarder={() => openFollowUpDialog(artifact, "harder")}
                 onDelete={() => onDeleteArtifact(artifact.id)}
               />
             ))}
@@ -137,7 +145,19 @@ const ProjectView = ({
         </section>
       </div>
 
-      <ActionBar disabled={isLoading} onGenerate={onGenerate} />
+      <ActionBar disabled={isLoading} onOpen={openNewDialog} />
+
+      {dialog && (
+        <GenerateDialog
+          type={dialog.type}
+          preset={dialog.preset}
+          base={dialog.base}
+          baseMode={dialog.baseMode}
+          weakItems={getWeakItems(project, dialog.type)}
+          onGenerate={generateFromDialog}
+          onClose={() => setDialog(null)}
+        />
+      )}
     </div>
   );
 };

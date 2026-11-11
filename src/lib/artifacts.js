@@ -1,5 +1,6 @@
 import { getProjectItemTexts, isQuoteInNotes, removeDuplicates } from "./checks.js";
 import { plural } from "./utils.js";
+import { LIMITS } from "../../shared/limits.js";
 
 // What one item is called in messages
 export const itemWord = (type) => {
@@ -66,7 +67,41 @@ export const buildArtifact = (project, options, response) => {
     items,
     messages: buildMessages(options.type, options.count, items.length, response.dropped, removed),
     progress: emptyProgress(options.type),
+    weakFocus: options.weak.length > 0,
   };
+};
+
+// The text of items the student is weak on, across every set of this type in the project
+// Flashcards: cards marked "still learning". Quizzes: questions missed in the latest full attempt.
+export const getWeakItems = (project, type) => {
+  const texts = [];
+  for (const artifact of project.artifacts) {
+    if (artifact.type !== type) {
+      continue;
+    }
+
+    if (type === "flashcards") {
+      for (const card of artifact.items) {
+        if (artifact.progress.cards[card.id] === "learning") {
+          texts.push(card.front);
+        }
+      }
+      continue;
+    }
+
+    const attempts = artifact.progress.attempts;
+    const latest = attempts[attempts.length - 1];
+    // Attempts saved before this feature have no wrongIds
+    if (!latest || !latest.wrongIds) {
+      continue;
+    }
+    for (const question of artifact.items) {
+      if (latest.wrongIds.includes(question.id)) {
+        texts.push(question.question);
+      }
+    }
+  }
+  return texts.slice(-LIMITS.weakMax);
 };
 
 // Counts flashcards by status: known, learning, and new

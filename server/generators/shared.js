@@ -59,7 +59,20 @@ export const describeExisting = (existing) => {
     return "";
   }
   const list = existing.map((text) => `- ${text}`).join("\n");
-  return `These already exist in the project. Do not repeat or rephrase them; cover different material:\n${list}`;
+  return `These already exist in the project. Do not repeat or rephrase them:\n${list}`;
+};
+
+// Lists items the student finds hard, so the new items practise the same ideas
+// Without weak items, the model is told to cover new material instead
+export const describeWeak = (weak, existing) => {
+  if (weak.length === 0 && existing.length === 0) {
+    return "";
+  }
+  if (weak.length === 0) {
+    return "Cover material that the existing items do not already test.";
+  }
+  const list = weak.map((text) => `- ${text}`).join("\n");
+  return `The student is struggling with these. Write new items that test the same ideas from a different angle, without copying them:\n${list}`;
 };
 
 // Explains when to refuse instead of generating

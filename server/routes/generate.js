@@ -27,6 +27,8 @@ const requestSchema = z.object({
   difficulty: z.enum(DIFFICULTIES),
   instruction: z.string().max(LIMITS.instructionMax).default(""),
   existing: z.array(z.string()).max(LIMITS.existingMax).default([]),
+  // Items the student is weak on, for "practise my weak spots"
+  weak: z.array(z.string().max(500)).max(LIMITS.weakMax).default([]),
 });
 
 // Checks the request body and returns a clean copy, or throws INPUT_INVALID

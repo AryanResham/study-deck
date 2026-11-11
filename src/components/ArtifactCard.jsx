@@ -42,8 +42,9 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
         <span className="mt-1 block text-sm text-zinc-400">
           {plural(artifact.items.length, itemWord(artifact.type))} · <span className="capitalize">{artifact.difficulty}</span>
         </span>
+        {artifact.weakFocus && <span className="mt-1 block text-xs text-zinc-500">Practises your weak spots</span>}
         {artifact.instruction && (
-          <span className="mt-1 block truncate text-xs text-zinc-500">Focus: {artifact.instruction}</span>
+          <span className="mt-1 block truncate text-xs text-zinc-500">Directions: {artifact.instruction}</span>
         )}
         <span className="mt-3 block text-sm text-zinc-300">{describeProgress(artifact)}</span>
 

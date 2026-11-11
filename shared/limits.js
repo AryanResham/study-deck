@@ -6,6 +6,7 @@ export const LIMITS = {
   notesMax: 20000,
   instructionMax: 200,
   existingMax: 100,
+  weakMax: 50,
 };
 
 export const COUNTS = [5, 10, 15];

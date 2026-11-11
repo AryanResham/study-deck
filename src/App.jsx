@@ -143,6 +143,8 @@ const App = () => {
       instruction: options.instruction,
       // The most recent questions, so the model writes new ones
       existing: getProjectItemTexts(project).slice(-LIMITS.existingMax),
+      // Items to practise again, when "My weak spots" was chosen
+      weak: options.weak,
     };
 
     try {
