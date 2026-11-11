@@ -121,7 +121,8 @@ const ProjectView = ({
             </div>
           )}
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {/* grid-cols-1 caps the phone column at the screen width, so long text cannot push cards off-screen */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {project.artifacts.map((artifact) => (
               <ArtifactCard
                 key={artifact.id}

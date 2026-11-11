@@ -14,6 +14,11 @@ body {
   color-scheme: dark;
 }
 
+/* Very long words (for example from AI text or pasted notes) wrap instead of running off narrow screens */
+#root {
+  overflow-wrap: break-word;
+}
+
 /* 3D flip for flashcards: the inner box turns, each face hides its back */
 .flip-card {
   perspective: 1200px;

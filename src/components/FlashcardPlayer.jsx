@@ -177,7 +177,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                   <div className="flip-card-face flex flex-col rounded-2xl border border-zinc-700 bg-zinc-900 p-6">
                     <span className="text-xs tracking-wide text-zinc-500 uppercase">Question</span>
                     <div className="flex flex-1 items-center justify-center overflow-y-auto">
-                      <p className="text-center text-xl leading-snug font-medium md:text-2xl">{card.front}</p>
+                      <p className="w-full text-center text-xl leading-snug font-medium md:text-2xl">{card.front}</p>
                     </div>
                     <span className="text-center text-xs text-zinc-500 md:hidden">Tap to flip · swipe to move</span>
                     <span className="hidden text-center text-xs text-zinc-500 md:inline">Tap or press Space to flip</span>
@@ -185,7 +185,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                   <div className="flip-card-face flip-card-back flex flex-col rounded-2xl border border-zinc-600 bg-zinc-800 p-6">
                     <span className="text-xs tracking-wide text-zinc-400 uppercase">Answer</span>
                     <div className="flex flex-1 items-center justify-center overflow-y-auto">
-                      <p className="text-center text-lg leading-relaxed md:text-xl">{card.back}</p>
+                      <p className="w-full text-center text-lg leading-relaxed md:text-xl">{card.back}</p>
                     </div>
                     <SourceNote item={card} />
                   </div>

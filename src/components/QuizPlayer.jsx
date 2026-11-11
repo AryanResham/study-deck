@@ -211,7 +211,7 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
                     >
                       {optionMarker(option, optionIndex)}
                     </span>
-                    <span>{option}</span>
+                    <span className="min-w-0">{option}</span>
                   </button>
                 ))}
               </div>
