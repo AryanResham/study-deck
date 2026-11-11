@@ -1,3 +1,4 @@
+import { Layers, ListChecks, TriangleAlert } from "lucide-react";
 import { countCardStatuses, itemWord } from "../lib/artifacts.js";
 import { plural } from "../lib/utils.js";
 
@@ -33,11 +34,8 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
   return (
     <div className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900 transition-colors hover:border-zinc-700">
       <button type="button" className="flex-1 p-4 text-left" onClick={onOpen}>
-        <span
-          className={`inline-block rounded-md px-2 py-0.5 text-xs font-medium ${
-            "bg-zinc-800 text-zinc-300"
-          }`}
-        >
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-zinc-800 px-2 py-0.5 text-xs font-medium text-zinc-300">
+          {isQuiz ? <ListChecks size={14} /> : <Layers size={14} />}
           {isQuiz ? "Quiz" : "Flashcards"}
         </span>
         <span className="mt-2 block font-medium text-zinc-100">{artifact.title}</span>
@@ -55,8 +53,9 @@ const ArtifactCard = ({ artifact, isBusy, onOpen, onMoreLikeThis, onHarder, onDe
           </span>
         ))}
         {flaggedCount > 0 && (
-          <span className="mt-1 block text-xs text-zinc-400">
-            ⚠ {plural(flaggedCount, itemWord(artifact.type))} may not be from your notes
+          <span className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
+            <TriangleAlert size={14} className="shrink-0" />
+            {plural(flaggedCount, itemWord(artifact.type))} may not be from your notes
           </span>
         )}
       </button>

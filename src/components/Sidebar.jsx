@@ -1,3 +1,4 @@
+import { Plus, X } from "lucide-react";
 import { plural } from "../lib/utils.js";
 
 // Lists projects; on small screens it slides in as a drawer
@@ -25,21 +26,22 @@ const Sidebar = ({ projects, selectedId, generations, isOpen, onClose, onSelect,
           </span>
           <button
             type="button"
-            className="rounded-md px-3 py-2 text-zinc-400 hover:bg-zinc-800 md:hidden"
+            className="rounded-md p-2 text-zinc-400 hover:bg-zinc-800 md:hidden"
             onClick={onClose}
             aria-label="Close menu"
           >
-            ✕
+            <X size={20} />
           </button>
         </div>
 
         <div className="px-3">
           <button
             type="button"
-            className="w-full rounded-lg bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 hover:bg-white"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 hover:bg-white"
             onClick={onNew}
           >
-            + New project
+            <Plus size={16} />
+            New project
           </button>
         </div>
 

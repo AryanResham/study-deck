@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown, ChevronUp, Menu } from "lucide-react";
 import ActionBar from "./ActionBar.jsx";
 import ArtifactCard from "./ArtifactCard.jsx";
 import PendingCard from "./PendingCard.jsx";
@@ -63,11 +64,11 @@ const ProjectView = ({
           <div className="flex items-start gap-3">
             <button
               type="button"
-              className="mt-0.5 rounded-md px-3 py-2 text-zinc-300 hover:bg-zinc-800 md:hidden"
+              className="rounded-md p-2 text-zinc-300 hover:bg-zinc-800 md:hidden"
               onClick={onOpenSidebar}
               aria-label="Open projects"
             >
-              ☰
+              <Menu size={20} />
             </button>
             <div className="min-w-0 flex-1">
               <h1 className="truncate text-xl font-semibold tracking-tight md:text-2xl">{project.title}</h1>
@@ -77,11 +78,12 @@ const ProjectView = ({
                 {isNotes && (
                   <button
                     type="button"
-                    className="py-1 text-zinc-300 underline underline-offset-2 hover:text-white"
+                    className="inline-flex items-center gap-1 py-1 text-zinc-300 hover:text-white"
                     onClick={() => setShowSource(!showSource)}
                     aria-expanded={showSource}
                   >
-                    {showSource ? "Hide notes ▴" : "Show notes ▾"}
+                    {showSource ? "Hide notes" : "Show notes"}
+                    {showSource ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
                 )}
               </div>

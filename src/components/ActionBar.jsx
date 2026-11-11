@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { COUNTS, DIFFICULTIES, LIMITS } from "../../shared/limits.js";
 
 // A row of toggle buttons, used for count and difficulty
@@ -41,7 +42,7 @@ const ActionBar = ({ disabled, onGenerate }) => {
   };
 
   const mainButton =
-    "flex-1 rounded-lg px-3 py-3 text-sm font-medium whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:px-4 sm:py-2.5";
+    "inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-3 text-sm font-medium whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:px-4 sm:py-2.5";
 
   return (
     <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-3 md:px-8">
@@ -53,7 +54,8 @@ const ActionBar = ({ disabled, onGenerate }) => {
             className={`${mainButton} bg-zinc-100 text-zinc-900 hover:bg-white`}
             onClick={() => generate("flashcards")}
           >
-            + Flashcards
+            <Plus size={16} />
+            Flashcards
           </button>
           <button
             type="button"
@@ -61,16 +63,18 @@ const ActionBar = ({ disabled, onGenerate }) => {
             className={`${mainButton} border border-zinc-700 bg-zinc-900 text-zinc-100 hover:bg-zinc-800`}
             onClick={() => generate("quiz")}
           >
-            + Quiz
+            <Plus size={16} />
+            Quiz
           </button>
           {/* Only on small screens: opens the options */}
           <button
             type="button"
-            className="shrink-0 rounded-lg px-3 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 lg:hidden"
+            className="inline-flex shrink-0 items-center gap-1 rounded-lg px-3 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 lg:hidden"
             onClick={() => setShowOptions(!showOptions)}
             aria-expanded={showOptions}
           >
-            Options {showOptions ? "▴" : "▾"}
+            Options
+            {showOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
         </div>
 

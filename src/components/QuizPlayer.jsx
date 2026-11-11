@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Check, X } from "lucide-react";
 import PlayerHeader from "./PlayerHeader.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { plural, shouldIgnoreKey, shuffle } from "../lib/utils.js";
@@ -96,13 +97,13 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
     return "border-zinc-800 bg-zinc-900 text-zinc-500";
   };
 
-  // The small box before an option: its number, then ✓ or ✗ after answering
+  // The small box before an option: its number, then a tick or a cross after answering
   const optionMarker = (option, optionIndex) => {
     if (selected !== null && option === question.answer) {
-      return "✓";
+      return <Check size={14} />;
     }
     if (selected !== null && option === selected) {
-      return "✗";
+      return <X size={14} />;
     }
     return optionIndex + 1;
   };
@@ -199,8 +200,9 @@ const QuizPlayer = ({ artifact, onProgress, onBack }) => {
 
               {selected !== null && (
                 <div className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-4" role="status">
-                  <p className="font-medium text-white">
-                    {selected === question.answer ? "✓ Correct" : "✗ Not quite"}
+                  <p className="flex items-center gap-1.5 font-medium text-white">
+                    {selected === question.answer ? <Check size={18} /> : <X size={18} />}
+                    {selected === question.answer ? "Correct" : "Not quite"}
                   </p>
                   <p className="mt-1 text-sm text-zinc-300">{question.explanation}</p>
                   <div className="mt-2">

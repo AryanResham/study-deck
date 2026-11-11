@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import { LIMITS, checkSourceText } from "../../shared/limits.js";
 import { EXAMPLE_TOPICS, SAMPLE_NOTES } from "../lib/examples.js";
 
@@ -48,11 +49,11 @@ const NewProjectForm = ({ hasProjects, onCreate, onOpenSidebar }) => {
       <div className="flex items-center gap-2 px-4 pt-4 md:hidden">
         <button
           type="button"
-          className="rounded-md px-3 py-2 text-zinc-300 hover:bg-zinc-800"
+          className="rounded-md p-2 text-zinc-300 hover:bg-zinc-800"
           onClick={onOpenSidebar}
           aria-label="Open projects"
         >
-          ☰
+          <Menu size={20} />
         </button>
         <span className="font-semibold">
           Study<span className="text-zinc-500">Deck</span>

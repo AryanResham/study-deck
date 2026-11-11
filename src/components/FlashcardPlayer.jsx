@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, Shuffle } from "lucide-react";
 import PlayerHeader from "./PlayerHeader.jsx";
 import SourceNote from "./SourceNote.jsx";
 import { countCardStatuses } from "../lib/artifacts.js";
@@ -111,9 +112,10 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
       <PlayerHeader title={artifact.title} subtitle={roundLabel} onBack={onBack}>
         <button
           type="button"
-          className="rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-1.5"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-1.5"
           onClick={() => startRound(shuffle(isFinished ? allIds : order), isReview)}
         >
+          <Shuffle size={16} />
           Shuffle
         </button>
       </PlayerHeader>
@@ -209,28 +211,35 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
               <div className="mt-4 flex items-center justify-between">
                 <button
                   type="button"
-                  className="rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2 disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-40 sm:py-2"
                   disabled={index === 0}
                   onClick={previous}
                 >
-                  ← Previous
+                  <ArrowLeft size={16} />
+                  Previous
                 </button>
-                <span className="text-sm text-zinc-400">
+                <span className="inline-flex items-center text-sm text-zinc-400">
                   {index + 1} / {order.length}
-                  {statuses[card.id] === "known" && <span className="ml-2 text-zinc-200">✓ known</span>}
+                  {statuses[card.id] === "known" && (
+                    <span className="ml-2 inline-flex items-center gap-1 text-zinc-200">
+                      <Check size={14} />
+                      known
+                    </span>
+                  )}
                   {statuses[card.id] === "learning" && <span className="ml-2 text-zinc-500">learning</span>}
                 </span>
                 <button
                   type="button"
-                  className="rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2"
+                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2"
                   onClick={next}
                 >
-                  Next →
+                  Next
+                  <ArrowRight size={16} />
                 </button>
               </div>
 
               <p className="mt-6 hidden text-center text-xs text-zinc-600 md:block">
-                Space flip · ← → move · 1 still learning · 2 got it
+                Space flip · arrow keys move · 1 still learning · 2 got it
               </p>
             </>
           )}
