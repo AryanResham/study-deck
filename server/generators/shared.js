@@ -81,7 +81,7 @@ export const describeWeak = (weak, existing) => {
 // Explains when to refuse instead of generating
 export const describeRefusals = (source) => {
   const lines = [
-    'If the input is not real study material (gibberish, random characters, or unrelated to learning), reply only with {"status": "rejected", "reason": "<one short sentence for the student>"}.',
+    'If the input is not real study material (gibberish, random characters, a request or command such as "order me a pizza" instead of a subject, or unrelated to learning), reply only with {"status": "rejected", "reason": "<one short sentence for the student>"}.',
   ];
   if (source.kind === "notes") {
     lines.push(
