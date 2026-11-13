@@ -50,6 +50,15 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
     next();
   };
 
+  // Moves on without marking: a card that was never marked counts as "still learning"
+  // (mark() calls next() directly, so a card just marked "Got it" is not overwritten)
+  const skip = () => {
+    if (card && !statuses[card.id]) {
+      onProgress({ cards: { ...statuses, [card.id]: "learning" } });
+    }
+    next();
+  };
+
   // Starts a new round with the given cards
   const startRound = (ids, review) => {
     setOrder(ids);
@@ -76,7 +85,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
       return;
     }
     if (movedX < 0) {
-      next();
+      skip();
     } else {
       previous();
     }
@@ -95,7 +104,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
         event.preventDefault();
         setFlipped(!flipped);
       } else if (event.key === "ArrowRight") {
-        next();
+        skip();
       } else if (event.key === "ArrowLeft") {
         previous();
       } else if (event.key === "1") {
@@ -234,7 +243,7 @@ const FlashcardPlayer = ({ artifact, onProgress, onBack }) => {
                 <button
                   type="button"
                   className="inline-flex items-center gap-1.5 rounded-lg px-3 py-3 text-sm text-zinc-300 hover:bg-zinc-800 sm:py-2"
-                  onClick={next}
+                  onClick={skip}
                 >
                   Next
                   <ArrowRight size={16} />
