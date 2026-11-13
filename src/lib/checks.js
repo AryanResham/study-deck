@@ -12,10 +12,14 @@ export const getItemText = (type, item) => {
   return type === "quiz" ? item.question : item.front;
 };
 
-// Lists the text of every item in the project, oldest first
-export const getProjectItemTexts = (project) => {
+// Lists the text of every item of one type in the project, oldest first
+// Flashcards and quizzes are counted apart, so a quiz can still test what the cards covered
+export const getProjectItemTexts = (project, type) => {
   const texts = [];
   for (const artifact of project.artifacts) {
+    if (artifact.type !== type) {
+      continue;
+    }
     for (const item of artifact.items) {
       texts.push(getItemText(artifact.type, item));
     }

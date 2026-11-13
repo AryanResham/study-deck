@@ -42,7 +42,7 @@ const buildMessages = (type, requested, keptCount, dropped, duplicates) => {
 // Turns a successful response into a new artifact for the project
 // Returns null when every item was a duplicate
 export const buildArtifact = (project, options, response) => {
-  const { kept, removed } = removeDuplicates(options.type, response.items, getProjectItemTexts(project));
+  const { kept, removed } = removeDuplicates(options.type, response.items, getProjectItemTexts(project, options.type));
   if (kept.length === 0) {
     return null;
   }
